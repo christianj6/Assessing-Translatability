@@ -9,3 +9,5 @@ also we're missing ngramprobs
 
 
 you gotta get the corpora from the OPUS website and be sure to name them right in the dir
+
+hey wtf are all the dependencies
