@@ -17,9 +17,8 @@ Spellchecker
 
 
 
-Corpora
 
-Three corpora must be downloaded from the http://opus.nlpl.eu/ website. They should be downloaded as aligned MOSES format and the respective files named according to the variables in extractor_3.py and placed in the same directory.
+Three corpora must also be downloaded from the http://opus.nlpl.eu/ website. They should be downloaded as aligned MOSES format and the respective files named according to the variables in extractor_3.py and placed in the same directory.
 
 
 http://opus.nlpl.eu/Europarl.php
