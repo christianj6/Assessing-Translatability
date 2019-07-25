@@ -5,7 +5,7 @@ Algorithmic procedure for scoring German compounds according to English-Translat
 
 Dependencies
 
-CharSplit
+CharSplit (please use the modified script included above. The ngram probability file must be downloaded from https://github.com/dtuggener/CharSplit)
 
 nltk (stem, corpus, tokenize)
 
