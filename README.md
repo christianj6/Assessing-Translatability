@@ -1,6 +1,8 @@
 # Assessing-Translatability
 Algorithmic procedure for scoring German compounds according to English-Translatability.
 
+
+
 Dependencies
 
 CharSplit
@@ -12,6 +14,8 @@ heapq
 bs4
 
 Spellchecker
+
+
 
 Corpora
 
