@@ -1,13 +1,25 @@
 # Assessing-Translatability
 Algorithmic procedure for scoring German compounds according to English-Translatability.
 
-blahblahblah
+Dependencies
 
-hey that charsplit script isn't mine
+CharSplit
 
-also we're missing ngramprobs
+nltk (stem, corpus, tokenize)
+
+heapq
+
+bs4
+
+Spellchecker
+
+Corpora
+
+Three corpora must be downloaded from the http://opus.nlpl.eu/ website. They should be downloaded as aligned MOSES format and the respective files named according to the variables in extractor_3.py and placed in the same directory.
 
 
-you gotta get the corpora from the OPUS website and be sure to name them right in the dir
+http://opus.nlpl.eu/Europarl.php
 
-hey wtf are all the dependencies
+http://opus.nlpl.eu/Wikipedia.php
+
+http://opus.nlpl.eu/OpenSubtitles-v2018.php
