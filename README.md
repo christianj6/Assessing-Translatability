@@ -41,6 +41,6 @@ Download all the scripts and dependencies listed above.
 
 Run 'extractor_3.py' as the main script
 
-Results will be extracted to the main directory after each iteration of the main script, but these files should be cleaned manually after each iteration.
+Results will be extracted to the main directory after each iteration of the main script, but these directories should be emptied manually after each iteration.
 
 
