@@ -43,6 +43,12 @@ todo
 
 ---
 
+### Documentation
+
+For further details on the algorithm, its evaluation, and application in a small study, please consult the ```\docs``` directory.
+
+---
+
 ### todo
 
 - [ ] import ngram_probs correctly
@@ -57,5 +63,6 @@ todo
     - [ ] wordnet
 - [ ] usage instructions
 - [ ] remove all 'main' methods from non-main scripts
-- [ ] section linking to docs
+- [x] section linking to docs
 - [ ] test cases
+- [ ] note that i stole the charplit code
