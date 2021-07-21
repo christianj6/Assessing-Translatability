@@ -56,3 +56,6 @@ todo
     - [ ] averaged_perceptron_tagger
     - [ ] wordnet
 - [ ] usage instructions
+- [ ] remove all 'main' methods from non-main scripts
+- [ ] section linking to docs
+- [ ] test cases
