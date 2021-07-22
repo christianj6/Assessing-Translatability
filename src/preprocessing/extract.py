@@ -1,5 +1,3 @@
-"""An algorithm to extract English German multi-noun compounds which are difficult to translate and score them according to 'translatability.'"""
-
 import re
 import os
 import nltk
@@ -8,44 +6,30 @@ import char_split
 import collections
 import duden_search
 import google_search
-import prepare_results
 from nltk.corpus import wordnet_ic
 from nltk.corpus import wordnet as wn
 from spellchecker import SpellChecker
-from nltk.tokenize import sent_tokenize
-from nltk.stem import WordNetLemmatizer
-from calculate_translatability import (
-    lemmatize_translations,
-    lemmatize_TECs,
-    normalize_dictionary,
-    score_translatability,
-    normalize_TECs,
-    generate_test_dictionary,
-)
 
-# CORPORA - Sentence aligned .txt files
-
-EUROPARL_DE = "europarl_de.txt"
-EUROPARL_EN = "europarl_en.txt"
-
-WIKIPEDIA_DE = "wikipedia_de.txt"
-WIKIPEDIA_EN = "wikipedia_en.txt"
-
-SUBTITLES_DE = "subtitles_de.de"
-SUBTITLES_EN = "subtitles_en.en"
 
 brown_ic = wordnet_ic.ic("ic-brown.dat")
 semcor_ic = wordnet_ic.ic("ic-semcor.dat")
 
 
 def extract_nouns(text):
-    """Extracts nouns from input German text."""
-    capitalized = re.findall(r"[A-Z,Ä,Ö,Ü][a-z,ä,ö,ü,ß]+", text, flags=re.UNICODE)
+    """
+    Extracts nouns from input German text.
+    """
+    capitalized = re.findall(
+        r"[A-Z,Ä,Ö,Ü][a-z,ä,ö,ü,ß]+", text, flags=re.UNICODE
+    )
     return capitalized
 
 
 def clean_nouns(noun_list):
-    """Cleans noun list for duplicates and removes other unwanted candidates."""
+    """
+    Cleans noun list for duplicates and
+    removes other unwanted candidates.
+    """
     nouns_cleaned = set()
     for noun in noun_list:
         if len(noun) > 5:
@@ -55,7 +39,11 @@ def clean_nouns(noun_list):
 
 
 def split_compounds(candidates):
-    """Splits a compound candidate into noun segments, filtering out candidates which do not yield multiple noun segments."""
+    """
+    Splits a compound candidate into noun segments,
+    filtering out candidates which
+    do not yield multiple noun segments.
+    """
     compounds = []
     for noun in candidates:
         segments = char_split.split_compound(noun)
@@ -72,7 +60,10 @@ def split_compounds(candidates):
 
 
 def extract_compounds(candidates):
-    """Iterative extraction of valid compounds from list of split compound candidates."""
+    """
+    Iterative extraction of valid compounds
+    from list of split compound candidates.
+    """
     spell = SpellChecker(language="de")
     compounds_preliminary = []
     compounds_final = []
@@ -118,7 +109,11 @@ def extract_compounds(candidates):
 
 
 def prepare_segment_file(word, directory):
-    """Accepts a dictionary entry, creating an accompanying file where the extracted corpus segments will be stored. File paths are linked in dictionary."""
+    """
+    Accepts a dictionary entry, creating an accompanying
+    file where the extracted corpus segments will be stored.
+    File paths are linked in dictionary.
+    """
     file_path = directory + "\\" + word + ".txt"
     segments_entry = {"segments": file_path}
     with open(file_path, "w") as f:
@@ -128,7 +123,10 @@ def prepare_segment_file(word, directory):
 
 
 def write_segments(segments, file_path):
-    """Writes extracted corpus segments to the relevant files for each word."""
+    """
+    Writes extracted corpus segments to the
+    relevant files for each word.
+    """
     for segment in segments:
         with open(file_path, "a", encoding="utf-8") as f:
             f.write(segment)
@@ -138,7 +136,10 @@ def write_segments(segments, file_path):
 
 
 def prepare_corpus(source, target):
-    """Zips source and target corpus files into iterable to be used during querying."""
+    """
+    Zips source and target corpus files
+    into iterable to be used during querying.
+    """
     with open(source, "rb") as f:
         print("Reading source file...")
         source_read = f.read().splitlines()
@@ -153,7 +154,11 @@ def prepare_corpus(source, target):
 
 
 def query_corpus(corpus, word):
-    """Checks word against corpus iterable, generating dictionary of the target segments containing this word ."""
+    """
+    Checks word against corpus iterable,
+    generating dictionary of the target
+    segments containing this word .
+    """
     segments = []
     for item in corpus:
         if str(word) in str(item[0]):
@@ -163,7 +168,11 @@ def query_corpus(corpus, word):
 
 
 def extract_translation_candidates(dictionary):
-    """For each item in dictionary, extracts likely translation equivalents from segments based on POS and frequency. Updates the item with list of TECs."""
+    """
+    For each item in dictionary, extracts likely
+    translation equivalents from segments based on POS and frequency.
+    Updates the item with list of TECs.
+    """
 
     for word in dictionary:
         nouns_in_segments = []
@@ -172,9 +181,10 @@ def extract_translation_candidates(dictionary):
             if len(lines) == 0:
                 dictionary[word].update({"TECs": "n/a", "score": "n/a"})
                 print(
-                    "No segments found for '{word}.' This word has been removed from the candidate list.".format(
+                    "No segments found for '{word}.'".format(
                         word=word
                     )
+                    " This word has been removed from the candidate list."
                 )
 
             elif len(lines) == 1:
@@ -193,9 +203,10 @@ def extract_translation_candidates(dictionary):
 
                 dictionary[word].update({"TECs": TEC_list, "score": 0})
                 print(
-                    "Possible TECs for '{word}'. Only one segment found.".format(
+                    "Possible TECs for '{word}'.".format(
                         word=word
                     )
+                    " Only one segment found."
                 )
                 print(TEC_list)
                 print("\n\n")
@@ -232,72 +243,8 @@ def extract_translation_candidates(dictionary):
                     most_frequent.append(tpl)
 
                 dictionary[word].update({"TECs": most_frequent, "score": 0})
-                print("\n\nMost frequent nouns for '{word}':".format(word=word))
+                print(
+                    "\n\nMost frequent nouns for '{word}':".format(word=word)
+                )
                 print(most_frequent)
                 print("\n\n")
-
-
-def main():
-    text = input("Input a text from which the untranslatable words will be extracted: ")
-
-    cwd = os.getcwd()
-    segments_directory = cwd + "\\segments"
-    lemmatizer = WordNetLemmatizer()
-
-    print("\n\n\nExtracting nouns...")
-    noun_candidates = extract_nouns(text)
-    noun_candidates = clean_nouns(noun_candidates)
-
-    print("\n\n\nExtracting compounds...")
-    compound_candidates = split_compounds(noun_candidates)
-
-    print("\n\n\nAssessing compound segments...")
-    compound_translations = extract_compounds(compound_candidates)
-    dictionary_final = collections.defaultdict(dict)
-    for word in compound_translations:
-        dictionary_final.update({word: dict(translations=compound_translations[word])})
-
-    print("\n\n\nSegment filepaths:")
-    os.makedirs(segments_directory, exist_ok=True)
-    for word in dictionary_final:
-        dictionary_final[word].update(prepare_segment_file(word, segments_directory))
-
-    for i in dictionary_final.items():
-        print(i)
-
-    print("\n\n\nCrossreferencing corpus: EuroParl...")
-    for word in dictionary_final:
-        file_path = dictionary_final[word]["segments"]
-        EuroParl = prepare_corpus(EUROPARL_DE, EUROPARL_EN)
-        print("Searching for segments containing '{word}'...".format(word=word))
-        write_segments(query_corpus(EuroParl, word), file_path)
-
-    print("\n\n\nCrossreferencing corpus: Wikipedia...")
-    for word in dictionary_final:
-        file_path = dictionary_final[word]["segments"]
-        Wikipedia = prepare_corpus(WIKIPEDIA_DE, WIKIPEDIA_EN)
-        print("Searching for segments containing '{word}'...".format(word=word))
-        write_segments(query_corpus(Wikipedia, word), file_path)
-
-    print("\n\n\nCrossreferencing corpus: OpenSubtitles2018...")
-    for word in dictionary_final:
-        file_path = dictionary_final[word]["segments"]
-        Subtitles = prepare_corpus(SUBTITLES_DE, SUBTITLES_EN)
-        print("Searching for segments containing '{word}'...".format(word=word))
-        write_segments(query_corpus(Subtitles, word), file_path)
-
-    extract_translation_candidates(dictionary_final)
-    results = prepare_results.create_directory()
-    dictionary_final = prepare_results.export_unscored(dictionary_final, results)
-    lemmatize_translations(dictionary_final)
-    lemmatize_TECs(dictionary_final)
-    normalize_dictionary(dictionary_final)
-    score_translatability(dictionary_final)
-    text = sent_tokenize(text)
-    neat_list = prepare_results.print_neat_list(dictionary_final)
-    prepare_results.export_data_full(dictionary_final, results)
-    prepare_results.export_original_text(text, results)
-
-
-if __name__ == "__main__":
-    main()

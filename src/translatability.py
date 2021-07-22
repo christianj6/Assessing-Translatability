@@ -4,7 +4,6 @@ from nltk.corpus import wordnet as wn
 from nltk.corpus import wordnet_ic
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import sent_tokenize
-import prepare_results
 import heapq
 
 
@@ -28,7 +27,10 @@ def generate_test_dictionary():
 
 
 def lemmatize_translations(dictionary):
-    """Normalizes translations by lemmatizing and rendering in lower case."""
+    """
+    Normalizes translations by
+    lemmatizing and rendering in lower case.
+    """
     lemmatizer = WordNetLemmatizer()
     for word in dictionary:
         translations = []
@@ -39,7 +41,10 @@ def lemmatize_translations(dictionary):
 
 
 def lemmatize_TECs(dictionary):
-    """Normalizes TECs by lemmatizing and rendering in lower case"""
+    """
+    Normalizes TECs by lemmatizing a
+    nd rendering in lower case
+    """
     lemmatizer = WordNetLemmatizer()
     for word in dictionary:
         TECs = []
@@ -59,7 +64,11 @@ def lemmatize_TECs(dictionary):
 
 
 def normalize_dictionary(dictionary):
-    """The output is that the scores for ea are updated according to the calculations here reached."""
+    """
+    The output is that the scores for
+    ea are updated according to the
+    calculations here reached.
+    """
     for word in dictionary:
         if len(dictionary[word]["TECs"]) > 2:
             dictionary[word]["score"] = [0]
@@ -67,7 +76,6 @@ def normalize_dictionary(dictionary):
                 dictionary[word]["translations"], dictionary[word]["TECs"]
             )
 
-        # these candidates should be rewarded more for their stable translations ... just make sure it agrees with final calculation procedure
         elif dictionary[word]["TECs"][0][1] >= 0.2:
             dictionary[word]["score"] = [1]
 
@@ -76,7 +84,12 @@ def normalize_dictionary(dictionary):
 
 
 def normalize_TECs(translations, TECs):
-    """Accepts a list of tuples from dictionary entry and reduces this list to two entries based on translations of same dictionary entry, normalizing to length of other entries."""
+    """
+    Accepts a list of tuples from dictionary entry and
+    reduces this list to two entries based on
+    translations of same dictionary entry,
+    normalizing to length of other entries.
+    """
     TECs_new = []
     for translation in translations:
         TEC_similarity_comparision = collections.defaultdict()
@@ -94,11 +107,15 @@ def normalize_TECs(translations, TECs):
                         else:
                             similarity_measures.append(0)
 
-                TEC_similarity_comparision.update({TEC[0]: max(similarity_measures)})
+                TEC_similarity_comparision.update(
+                    {TEC[0]: max(similarity_measures)}
+                )
 
             else:
                 similarity_measures.append(0)
-                TEC_similarity_comparision.update({TEC[0]: max(similarity_measures)})
+                TEC_similarity_comparision.update(
+                    {TEC[0]: max(similarity_measures)}
+                )
 
         most_similar = max(
             TEC_similarity_comparision,
@@ -111,14 +128,17 @@ def normalize_TECs(translations, TECs):
 
 
 def score_translatability(dictionary):
-    """Scores each word in a dictionary according to the average of several semantic distance measures. Returns the original score list as a single float."""
+    """
+    Scores each word in a dictionary according to
+    the average of several semantic distance measures.
+    Returns the original score list as a single float.
+    """
     for word in dictionary:
         scores = dictionary[word]["score"]
         translations = dictionary[word]["translations"]
         TECs = dictionary[word]["TECs"]
         scores.append(wordnet_similarity_wup(translations, TECs))
         scores.append(wordnet_similarity_path(translations, TECs))
-        # scores.append(wordnet_similarity_jcn(translations, TECs))			#this measure displaces the scores too much
         scores.append(wordnet_similarity_lin(translations, TECs))
         dictionary[word]["score"] = sum(scores) / 4
 
@@ -140,11 +160,15 @@ def wordnet_similarity_wup(translations, TECs):
                         else:
                             similarity_measures.append(0)
 
-                scores_all.append(sum(heapq.nlargest(2, similarity_measures)) / 2)
+                scores_all.append(
+                    sum(heapq.nlargest(2, similarity_measures)) / 2
+                )
 
             else:
                 similarity_measures.append(0)
-                scores_all.append(sum(heapq.nlargest(2, similarity_measures)) / 2)
+                scores_all.append(
+                    sum(heapq.nlargest(2, similarity_measures)) / 2
+                )
 
     scores_avg = sum(scores_all) / 4
     return scores_avg
@@ -167,11 +191,15 @@ def wordnet_similarity_path(translations, TECs):
                         else:
                             similarity_measures.append(0)
 
-                scores_all.append(sum(heapq.nlargest(2, similarity_measures)) / 2)
+                scores_all.append(
+                    sum(heapq.nlargest(2, similarity_measures)) / 2
+                )
 
             else:
                 similarity_measures.append(0)
-                scores_all.append(sum(heapq.nlargest(2, similarity_measures)) / 2)
+                scores_all.append(
+                    sum(heapq.nlargest(2, similarity_measures)) / 2
+                )
 
     scores_avg = sum(scores_all) / 4
     return scores_avg
@@ -198,11 +226,15 @@ def wordnet_similarity_jcn(translations, TECs):
                         except nltk.corpus.reader.wordnet.WordNetError:
                             similarity_measures.append(0)
 
-                scores_all.append(sum(heapq.nlargest(2, similarity_measures)) / 2)
+                scores_all.append(
+                    sum(heapq.nlargest(2, similarity_measures)) / 2
+                )
 
             else:
                 similarity_measures.append(0)
-                scores_all.append(sum(heapq.nlargest(2, similarity_measures)) / 2)
+                scores_all.append(
+                    sum(heapq.nlargest(2, similarity_measures)) / 2
+                )
 
     scores_avg = sum(scores_all) / 4
     return scores_avg
@@ -229,31 +261,15 @@ def wordnet_similarity_lin(translations, TECs):
                         except nltk.corpus.reader.wordnet.WordNetError:
                             similarity_measures.append(0)
 
-                scores_all.append(sum(heapq.nlargest(2, similarity_measures)) / 2)
+                scores_all.append(
+                    sum(heapq.nlargest(2, similarity_measures)) / 2
+                )
 
             else:
                 similarity_measures.append(0)
-                scores_all.append(sum(heapq.nlargest(2, similarity_measures)) / 2)
+                scores_all.append(
+                    sum(heapq.nlargest(2, similarity_measures)) / 2
+                )
 
     scores_avg = sum(scores_all) / 4
     return scores_avg
-
-
-def main():
-    dictionary_final = generate_test_dictionary()
-    results = prepare_results.create_directory()
-    # text = sent_tokenize(input('Input some text: '))
-
-    dictionary_final = prepare_results.export_unscored(dictionary_final, results)
-    lemmatize_translations(dictionary_final)
-    lemmatize_TECs(dictionary_final)
-    normalize_dictionary(dictionary_final)
-
-    score_translatability(dictionary_final)
-    prepare_results.print_neat_list(dictionary_final)
-    prepare_results.export_data_full(dictionary_final, results)
-    prepare_results.export_original_text(text, results)
-
-
-if __name__ == "__main__":
-    main()

@@ -4,7 +4,9 @@ from nltk.tokenize import sent_tokenize
 
 
 def create_directory():
-    """Creates a directory within which the results will be stored"""
+    """
+    Creates a directory within which the results will be stored
+    """
     cwd = os.getcwd()
     results_directory = cwd + "\\results"
     os.makedirs(results_directory, exist_ok=True)
@@ -13,7 +15,10 @@ def create_directory():
 
 
 def export_unscored(dictionary, directory):
-    """Removes unscorable words from the dictionary and exports them to a separate list in the results directory"""
+    """
+    Removes unscorable words from the dictionary
+    and exports them to a separate list in the results directory
+    """
     new_dictionary = collections.defaultdict()
     unscorable = collections.defaultdict()
     for key, value in dictionary.items():
@@ -32,7 +37,10 @@ def export_unscored(dictionary, directory):
 
 
 def print_neat_list(dictionary):
-    """Prints the words and scores from the dictionary into a neat, readable format."""
+    """
+    Prints the words and scores from the
+    dictionary into a neat, readable format.
+    """
     neat_list = []
     for item in dictionary:
         word, score = item, dictionary[item]["score"]
@@ -48,7 +56,10 @@ def print_neat_list(dictionary):
 
 
 def export_data_full(dictionary, directory):
-    """Exports all dictionary data into list in results folder. Includes words, scores, translations, and TECs."""
+    """
+    Exports all dictionary data into list in results folder.
+    Includes words, scores, translations, and TECs.
+    """
     listed = []
     export_file = directory + "\\scored.txt"
     for item in dictionary:
@@ -81,7 +92,9 @@ def export_marked_text(text, neat_list, directory):
     for tpl in neat_list:
         text_joined = text_joined.replace(
             tpl[1],
-            "[{word}:{score}]".format(word=tpl[1], score="{0:.2f}".format(tpl[0])),
+            "[{word}:{score}]".format(
+                word=tpl[1], score="{0:.2f}".format(tpl[0])
+            ),
         )
 
     text_split = sent_tokenize(text_joined)
