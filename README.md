@@ -32,7 +32,7 @@ Download Corpora.
 Ensure you download the above corpora as aligned MOSES format. You may pass the path to each of the files when running the script, as in the example below.
 
 ```
-[todo]
+python main.py -w [path to Wikipedia corpus] -e [path to Europarl corpus] -s [path to OpenSubtitles corpus]
 ```
 
 ---
@@ -64,6 +64,6 @@ For further details on the algorithm, its evaluation, and application in a small
 - [ ] usage instructions
 - [ ] remove all 'main' methods from non-main scripts
 - [x] section linking to docs
-- [ ] test cases
+- [ ] test cases and information on running them
 - [ ] note that i stole the charplit code
 - [ ] lookup tables and maybe pickle files of corpora to speed up corpora processing
