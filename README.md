@@ -66,3 +66,4 @@ For further details on the algorithm, its evaluation, and application in a small
 - [x] section linking to docs
 - [ ] test cases
 - [ ] note that i stole the charplit code
+- [ ] lookup tables and maybe pickle files of corpora to speed up corpora processing
