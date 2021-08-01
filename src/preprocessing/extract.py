@@ -2,7 +2,7 @@ import re
 import os
 import nltk
 import heapq
-import char_split
+import split
 import collections
 import duden_search
 import google_search
@@ -46,7 +46,7 @@ def split_compounds(candidates):
     """
     compounds = []
     for noun in candidates:
-        segments = char_split.split_compound(noun)
+        segments = split.split_compound(noun)
         compounds.append(segments)
 
     flat_list = [
