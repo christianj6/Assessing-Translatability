@@ -1,6 +1,6 @@
 import os
 import sys
-from src.tools.manage import execute_from_command_line
+from .tools.manage import execute_from_command_line
 
 
 def main():
