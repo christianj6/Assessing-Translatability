@@ -2,12 +2,23 @@ import os
 import json
 from . import command
 import argparse
+import nltk
 
 
 class ManagementUtility:
     def __init__(self, argv: list = None) -> None:
         self.argv = argv
         self.parser = self.setup_parser()
+        self.setup_nltk()
+
+    @classmethod
+    def setup_nltk(cls) -> None:
+        nltk.download("brown")
+        nltk.download("wordnet_ic")
+        nltk.download("punkt")
+        nltk.download("semcor")
+        nltk.download("averaged_perceptron_tagger")
+        nltk.download("wordnet")
 
     @classmethod
     def setup_parser(cls) -> argparse.ArgumentParser:
