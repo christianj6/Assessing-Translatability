@@ -3,6 +3,31 @@ import collections
 from nltk.tokenize import sent_tokenize
 
 
+def get_corpus_filepaths(dirpath):
+    """
+    Finds corpus fp given a directory.
+    """
+    en = de = dirpath
+    for file in os.listdir(dirpath):
+        if file.lower().endswith(".de"):
+            de = os.path.join(dirpath, file)
+
+        elif file.lower().endswith(".en"):
+            en = os.path.join(dirpath, file)
+
+    return en, de
+
+
+def load_text_from_file(fp):
+    """
+    Loads text from a file path.
+    """
+    with open(fp, "r", encoding="utf-8") as f:
+        ret = " ".join(f.read().splitlines())
+
+    return ret
+
+
 def create_directory():
     """
     Creates a directory within which the results will be stored
@@ -92,7 +117,9 @@ def export_marked_text(text, neat_list, directory):
     for tpl in neat_list:
         text_joined = text_joined.replace(
             tpl[1],
-            "[{word}:{score}]".format(word=tpl[1], score="{0:.2f}".format(tpl[0])),
+            "[{word}:{score}]".format(
+                word=tpl[1], score="{0:.2f}".format(tpl[0])
+            ),
         )
 
     text_split = sent_tokenize(text_joined)
