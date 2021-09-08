@@ -32,7 +32,7 @@ Download Corpora.
 Ensure you download the above corpora as aligned MOSES format. You may pass the path to each of the files when running the script, as in the example below.
 
 ```
-python main.py -w [path to Wikipedia corpus] -e [path to Europarl corpus] -s [path to OpenSubtitles corpus]
+python main.py -w <path to Wikipedia corpus> -e <path to Europarl corpus> -s <path to OpenSubtitles corpus> -f <path to file>
 ```
 
 ---
