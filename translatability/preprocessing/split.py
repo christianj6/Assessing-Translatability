@@ -8,9 +8,12 @@ import re
 import sys
 from statistics import mean
 import json
+import os
+import translatability
 
+translatability_path = path = os.path.dirname(translatability.__file__)
 
-with open("./res/ngrams.json", "r") as f:
+with open(translatability_path + "/preprocessing/ngrams.json", "r") as f:
     ngram_probs = json.load(f)
 
 
