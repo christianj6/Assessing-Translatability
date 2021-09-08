@@ -1,15 +1,14 @@
-from googletrans import Translator
+from deep_translator import GoogleTranslator
 
 
 def search(word):
-    translator = Translator()
+    translator = GoogleTranslator(source="de", target="en")
     text = word
 
     try:
         translation = (
-            translator.translate(text, dest="en", src="de").text
-            if translator.translate(text, dest="en", src="de").text
-            != translator.translate(text, dest="en", src="de").origin
+            translator.translate(text)
+            if translator.translate(text) != text
             else False
         )
         return translation
