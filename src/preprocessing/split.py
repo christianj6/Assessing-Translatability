@@ -4,10 +4,14 @@ Split German compound words
 
 __author__ = "don.tuggener@gmail.com"
 
-import ngram_probs  # trained with char_split_train.py
 import re
 import sys
 from statistics import mean
+import json
+
+
+with open("./res/ngrams.json", "r") as f:
+    ngram_probs = json.load(f)
 
 
 def split_compound(word: str):
@@ -52,7 +56,7 @@ def split_compound(word: str):
             if pre_slice_prob == [] and k <= len(pre_slice):
                 end_ngram = pre_slice[-k:]  # Look backwards
                 pre_slice_prob.append(
-                    ngram_probs.suffix.get(end_ngram, -1)
+                    ngram_probs["suffix"].get(end_ngram, -1)
                 )  # Punish unlikely pre_slice end_ngram
 
                 # print(end_ngram, pre_slice_prob)
@@ -60,7 +64,7 @@ def split_compound(word: str):
             # Probability of ngram in word, if high, split unlikely
             in_ngram = word[n : n + k]
             in_slice_prob.append(
-                ngram_probs.infix.get(in_ngram, 1)
+                ngram_probs["infix"].get(in_ngram, 1)
             )  # Favor ngrams not occurring within words
 
             # Probability of word starting
@@ -76,7 +80,7 @@ def split_compound(word: str):
                 ):
                     if len(ngram[:-1]) > 2:
                         ngram = ngram[:-1]
-                start_slice_prob.append(ngram_probs.prefix.get(ngram, -1))
+                start_slice_prob.append(ngram_probs["prefix"].get(ngram, -1))
 
                 # print(ngram, pre_slice_prob, in_slice_prob, start_slice_prob)
 
@@ -85,7 +89,9 @@ def split_compound(word: str):
 
         start_slice_prob = max(start_slice_prob)
         pre_slice_prob = max(pre_slice_prob)  # Highest, best preslice
-        in_slice_prob = min(in_slice_prob)  # Lowest, punish splitting of good ingrams
+        in_slice_prob = min(
+            in_slice_prob
+        )  # Lowest, punish splitting of good ingrams
 
         probabilities_all = [start_slice_prob, in_slice_prob, pre_slice_prob]
 
@@ -102,7 +108,9 @@ def split_compound(word: str):
 def germanet_evaluation(print_errors: bool = False):
     """ Test on GermaNet compounds from http://www.sfs.uni-tuebingen.de/lsd/compounds.shtml """
     cases, correct = 0, 0
-    for line in open("split_compounds_from_GermaNet14.0.txt", "r").readlines()[2:]:
+    for line in open("split_compounds_from_GermaNet14.0.txt", "r").readlines()[
+        2:
+    ]:
         cases += 1
         sys.stderr.write("\r" + str(cases))
         sys.stderr.flush()
@@ -121,7 +129,8 @@ def germanet_evaluation(print_errors: bool = False):
                 100 * correct / cases,
             )
     print(
-        " Accuracy (" + str(correct) + "/" + str(cases) + "): ", 100 * correct / cases
+        " Accuracy (" + str(correct) + "/" + str(cases) + "): ",
+        100 * correct / cases,
     )
 
 

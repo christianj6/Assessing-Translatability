@@ -1,7 +1,8 @@
-import prepare_results
+from .. import io
 from nltk.tokenize import sent_tokenize
 from nltk.stem import WordNetLemmatizer
-from calculate_translatability import (
+from ..preprocessing import extract
+from ..translatability import (
     lemmatize_translations,
     lemmatize_TECs,
     normalize_dictionary,
@@ -9,68 +10,73 @@ from calculate_translatability import (
     normalize_TECs,
     generate_test_dictionary,
 )
+import os
+import collections
 
 
-def run(args):
+def run(*args, **kwargs):
+    assert (
+        kwargs["file"] is not None
+    ), "You must input a file with the -f param."
 
-    text = input(
-        "\nInput a text from which the untranslatable words will be extracted: "
-    )
+    file = kwargs.pop("file")
+    # Parse the arguments.
+    corpora = []
+    for k, v in kwargs.items():
+        if v == "check_string_for_empty":
+            continue
 
+        corpora.append(v)
+
+    text = io.load_text_from_file(file)
     cwd = os.getcwd()
+    # Create a dir to store the extracted segments.
     segments_directory = cwd + "\\segments"
     lemmatizer = WordNetLemmatizer()
 
     print("\n\n\nExtracting nouns...")
-    noun_candidates = extract_nouns(text)
-    noun_candidates = clean_nouns(noun_candidates)
+
+    noun_candidates = extract.extract_nouns(text)
+    noun_candidates = extract.clean_nouns(noun_candidates)
 
     print("\n\n\nExtracting compounds...")
-    compound_candidates = split_compounds(noun_candidates)
+    compound_candidates = extract.split_compounds(noun_candidates)
 
     print("\n\n\nAssessing compound segments...")
-    compound_translations = extract_compounds(compound_candidates)
+    compound_translations = extract.extract_compounds(compound_candidates)
     dictionary_final = collections.defaultdict(dict)
     for word in compound_translations:
-        dictionary_final.update({word: dict(translations=compound_translations[word])})
+        dictionary_final.update(
+            {word: dict(translations=compound_translations[word])}
+        )
 
     print("\n\n\nSegment filepaths:")
     os.makedirs(segments_directory, exist_ok=True)
     for word in dictionary_final:
-        dictionary_final[word].update(prepare_segment_file(word, segments_directory))
+        dictionary_final[word].update(
+            extract.prepare_segment_file(word, segments_directory)
+        )
 
     for i in dictionary_final.items():
         print(i)
 
-    print("\n\n\nCrossreferencing corpus: EuroParl...")
-    for word in dictionary_final:
-        file_path = dictionary_final[word]["segments"]
-        EuroParl = prepare_corpus(EUROPARL_DE, EUROPARL_EN)
-        print("Searching for segments containing '{word}'...".format(word=word))
-        write_segments(query_corpus(EuroParl, word), file_path)
+    for i, corpus in enumerate(corpora):
+        print(f"Checking Corpus {i+1} ...")
+        fp_en, fp_de = io.get_corpus_filepaths(corpus)
+        c = list(extract.prepare_corpus(fp_de, fp_en))
+        for word, v in dictionary_final.items():
+            print(f"Searching for segments containing {word} ...")
+            fp_segments = v["segments"]
+            extract.write_segments(extract.query_corpus(c, word), fp_segments)
 
-    print("\n\n\nCrossreferencing corpus: Wikipedia...")
-    for word in dictionary_final:
-        file_path = dictionary_final[word]["segments"]
-        Wikipedia = prepare_corpus(WIKIPEDIA_DE, WIKIPEDIA_EN)
-        print("Searching for segments containing '{word}'...".format(word=word))
-        write_segments(query_corpus(Wikipedia, word), file_path)
-
-    print("\n\n\nCrossreferencing corpus: OpenSubtitles2018...")
-    for word in dictionary_final:
-        file_path = dictionary_final[word]["segments"]
-        Subtitles = prepare_corpus(SUBTITLES_DE, SUBTITLES_EN)
-        print("Searching for segments containing '{word}'...".format(word=word))
-        write_segments(query_corpus(Subtitles, word), file_path)
-
-    extract_translation_candidates(dictionary_final)
-    results = prepare_results.create_directory()
-    dictionary_final = prepare_results.export_unscored(dictionary_final, results)
+    extract.extract_translation_candidates(dictionary_final)
+    results = io.create_directory()
+    dictionary_final = io.export_unscored(dictionary_final, results)
     lemmatize_translations(dictionary_final)
     lemmatize_TECs(dictionary_final)
     normalize_dictionary(dictionary_final)
     score_translatability(dictionary_final)
     text = sent_tokenize(text)
-    neat_list = prepare_results.print_neat_list(dictionary_final)
-    prepare_results.export_data_full(dictionary_final, results)
-    prepare_results.export_original_text(text, results)
+    neat_list = io.print_neat_list(dictionary_final)
+    io.export_data_full(dictionary_final, results)
+    io.export_original_text(text, results)

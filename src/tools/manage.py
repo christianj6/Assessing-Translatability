@@ -21,6 +21,7 @@ class ManagementUtility:
         parser.add_argument(
             "-s", "--subtitles", nargs="?", default="check_string_for_empty"
         )
+        parser.add_argument("-f", "--file", type=str)
 
         return parser
 
