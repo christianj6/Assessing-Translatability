@@ -74,7 +74,7 @@ For further details on the algorithm, its evaluation, and application in a small
 ### Notes
 
 - The ```src/split.py``` module is a modified version of the [CharSplit](https://github.com/dtuggener/CharSplit) algorithm by dtuggener. All credit goes to this individual.
-- At the end of each run of the scripts, there is created in the root directory a ```results``` and ```segments``` directory containing temporary data. You should clean these files between runs or else results will be contaminated.
+- At the end of each run of the scripts, there is created in the current working directory a ```results``` and ```segments``` directory containing temporary data. You should clean these files between runs or else results will be contaminated.
 
 ***
 
