@@ -39,7 +39,7 @@ You can download parallel corpora necessary for the calculations from the links 
 
 Ensure you download the above corpora as aligned MOSES format. The image below demonstrates the appropriate download link for the OpenSubtitles corpus, which is found in the second of the two download matrices, within the lower-left triangle where the indices for "EN" and "DE" align. Please do not use the other "DE-EN" link in the top-right triangle because these data are in the wrong format.
 
-![](C:\Users\Christian\Desktop\assessing-translatability\docs\moseslink.png)
+![](https://github.com/christianj6/assessing-translatability/blob/master/docs/moseslink.png)
 
 You may pass the absolute path to each of the files when running the main script, as in the example below.
 
