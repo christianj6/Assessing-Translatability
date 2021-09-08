@@ -28,6 +28,10 @@ def run(*args, **kwargs):
 
         corpora.append(v)
 
+    assert all(
+        [os.path.exists(pth) for pth in corpora]
+    ), "You must provide absolute paths to the corpora."
+
     text = io.load_text_from_file(file)
     cwd = os.getcwd()
     # Create a dir to store the extracted segments.

@@ -24,15 +24,32 @@ class ManagementUtility:
     def setup_parser(cls) -> argparse.ArgumentParser:
         parser = argparse.ArgumentParser()
         parser.add_argument(
-            "-e", "--europarl", nargs="?", default="check_string_for_empty"
+            "-e",
+            "--europarl",
+            nargs="?",
+            default="check_string_for_empty",
+            help="Filepath of the EuroParl corpus directory containing .de and .en files.",
         )
         parser.add_argument(
-            "-w", "--wikipedia", nargs="?", default="check_string_for_empty"
+            "-w",
+            "--wikipedia",
+            nargs="?",
+            default="check_string_for_empty",
+            help="Filepath of the Wikipedia corpus directory containing .de and .en files.",
         )
         parser.add_argument(
-            "-s", "--subtitles", nargs="?", default="check_string_for_empty"
+            "-s",
+            "--subtitles",
+            nargs="?",
+            default="check_string_for_empty",
+            help="Filepath of the OpenSubtitles corpus directory containing .de and .en files.",
         )
-        parser.add_argument("-f", "--file", type=str)
+        parser.add_argument(
+            "-f",
+            "--file",
+            type=str,
+            help="Filepath of the .txt file you wish to evaluate.",
+        )
 
         return parser
 
