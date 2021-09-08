@@ -2,10 +2,9 @@ import re
 import os
 import nltk
 import heapq
-import split
+from . import split
 import collections
-import duden_search
-import google_search
+from ..search import duden as duden_search, google as google_search
 from nltk.corpus import wordnet_ic
 from nltk.corpus import wordnet as wn
 from spellchecker import SpellChecker
@@ -181,10 +180,9 @@ def extract_translation_candidates(dictionary):
             if len(lines) == 0:
                 dictionary[word].update({"TECs": "n/a", "score": "n/a"})
                 print(
-                    "No segments found for '{word}.'".format(
+                    "No segments found for '{word}.' This word has been removed from the candidate list.".format(
                         word=word
                     )
-                    " This word has been removed from the candidate list."
                 )
 
             elif len(lines) == 1:
@@ -203,10 +201,9 @@ def extract_translation_candidates(dictionary):
 
                 dictionary[word].update({"TECs": TEC_list, "score": 0})
                 print(
-                    "Possible TECs for '{word}'.".format(
+                    "Possible TECs for '{word}'. Only one segment found.".format(
                         word=word
                     )
-                    " Only one segment found."
                 )
                 print(TEC_list)
                 print("\n\n")
