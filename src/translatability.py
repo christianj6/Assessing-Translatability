@@ -107,15 +107,11 @@ def normalize_TECs(translations, TECs):
                         else:
                             similarity_measures.append(0)
 
-                TEC_similarity_comparision.update(
-                    {TEC[0]: max(similarity_measures)}
-                )
+                TEC_similarity_comparision.update({TEC[0]: max(similarity_measures)})
 
             else:
                 similarity_measures.append(0)
-                TEC_similarity_comparision.update(
-                    {TEC[0]: max(similarity_measures)}
-                )
+                TEC_similarity_comparision.update({TEC[0]: max(similarity_measures)})
 
         most_similar = max(
             TEC_similarity_comparision,
@@ -160,15 +156,11 @@ def wordnet_similarity_wup(translations, TECs):
                         else:
                             similarity_measures.append(0)
 
-                scores_all.append(
-                    sum(heapq.nlargest(2, similarity_measures)) / 2
-                )
+                scores_all.append(sum(heapq.nlargest(2, similarity_measures)) / 2)
 
             else:
                 similarity_measures.append(0)
-                scores_all.append(
-                    sum(heapq.nlargest(2, similarity_measures)) / 2
-                )
+                scores_all.append(sum(heapq.nlargest(2, similarity_measures)) / 2)
 
     scores_avg = sum(scores_all) / 4
     return scores_avg
@@ -191,15 +183,11 @@ def wordnet_similarity_path(translations, TECs):
                         else:
                             similarity_measures.append(0)
 
-                scores_all.append(
-                    sum(heapq.nlargest(2, similarity_measures)) / 2
-                )
+                scores_all.append(sum(heapq.nlargest(2, similarity_measures)) / 2)
 
             else:
                 similarity_measures.append(0)
-                scores_all.append(
-                    sum(heapq.nlargest(2, similarity_measures)) / 2
-                )
+                scores_all.append(sum(heapq.nlargest(2, similarity_measures)) / 2)
 
     scores_avg = sum(scores_all) / 4
     return scores_avg
@@ -226,15 +214,11 @@ def wordnet_similarity_jcn(translations, TECs):
                         except nltk.corpus.reader.wordnet.WordNetError:
                             similarity_measures.append(0)
 
-                scores_all.append(
-                    sum(heapq.nlargest(2, similarity_measures)) / 2
-                )
+                scores_all.append(sum(heapq.nlargest(2, similarity_measures)) / 2)
 
             else:
                 similarity_measures.append(0)
-                scores_all.append(
-                    sum(heapq.nlargest(2, similarity_measures)) / 2
-                )
+                scores_all.append(sum(heapq.nlargest(2, similarity_measures)) / 2)
 
     scores_avg = sum(scores_all) / 4
     return scores_avg
@@ -261,15 +245,11 @@ def wordnet_similarity_lin(translations, TECs):
                         except nltk.corpus.reader.wordnet.WordNetError:
                             similarity_measures.append(0)
 
-                scores_all.append(
-                    sum(heapq.nlargest(2, similarity_measures)) / 2
-                )
+                scores_all.append(sum(heapq.nlargest(2, similarity_measures)) / 2)
 
             else:
                 similarity_measures.append(0)
-                scores_all.append(
-                    sum(heapq.nlargest(2, similarity_measures)) / 2
-                )
+                scores_all.append(sum(heapq.nlargest(2, similarity_measures)) / 2)
 
     scores_avg = sum(scores_all) / 4
     return scores_avg

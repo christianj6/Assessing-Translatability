@@ -92,9 +92,7 @@ def export_marked_text(text, neat_list, directory):
     for tpl in neat_list:
         text_joined = text_joined.replace(
             tpl[1],
-            "[{word}:{score}]".format(
-                word=tpl[1], score="{0:.2f}".format(tpl[0])
-            ),
+            "[{word}:{score}]".format(word=tpl[1], score="{0:.2f}".format(tpl[0])),
         )
 
     text_split = sent_tokenize(text_joined)
